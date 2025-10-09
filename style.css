@@ -1,0 +1,93 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+section {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  gap: 40px;
+}
+
+.color-history,
+.redo-history {
+  width: 220px;
+  height: 70%;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  padding: 15px;
+}
+
+.color-history ul,
+.redo-history ul {
+  list-style-type: none;
+}
+
+.color-history li,
+.redo-history li {
+  margin: 8px 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* === MAIN AREA === */
+.main-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+#colorButton {
+  border: none;
+  outline: none;
+  font-size: 60px;
+  padding: 40px 80px;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+#colorButton:active {
+  transform: scale(0.97);
+}
+
+#undoBtn,
+#redoBtn {
+  font-size: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  background: #ddd;
+  transition: background 0.2s;
+}
+
+#undoBtn:hover,
+#redoBtn:hover {
+  background: #bbb;
+}
+
+li.dragging {
+  opacity: 0.5;
+  transform: scale(1.02);
+  cursor: grabbing;
+}

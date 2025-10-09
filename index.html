@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="sq">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Random Color Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section>
+
+    <div class="color-history">
+      <h3>Undo History</h3>
+      <ul id="colorList"></ul>
+    </div>
+
+    <div class="main-area">
+      <button id="undoBtn">Undo</button>
+      <button id="colorButton">0</button>
+      <button id="redoBtn">Redo</button>
+    </div>
+
+    <div class="redo-history">
+      <h3>Redo Stack</h3>
+      <ul id="redoList"></ul>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
