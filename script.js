@@ -7,7 +7,6 @@ const redoList = document.getElementById('redoList');
 let history = [];
 let redoStack = [];
 
-
 function getNiceColor() {
   let r, g, b;
 
@@ -23,8 +22,7 @@ function getNiceColor() {
     const diffBR = Math.abs(b - r);
 
     if (
-      (diffRG > 20 || diffGB > 20 || diffBR > 20) && 
-      luminance > 70 && luminance < 200 
+      (diffRG > 20 || diffGB > 20 || diffBR > 20) && luminance > 70 && luminance < 200 
     ) break;
   } while (true);
 
@@ -44,9 +42,9 @@ function applyColor(color) {
   button.style.color = getComplementaryColor(color.r, color.g, color.b);
 }
 
-function addToList(listElement, color, index) {
+function addToList(listElement, color) {
   const li = document.createElement('li');
-  li.textContent = `${index}. ${color.hex}`;
+  li.textContent = color.hex;
   li.style.backgroundColor = color.rgb;
   li.style.color = getComplementaryColor(color.r, color.g, color.b);
   li.draggable = true;
@@ -58,7 +56,6 @@ function addToList(listElement, color, index) {
 
   li.addEventListener('dragend', () => {
     li.classList.remove('dragging');
-    updateIndexes(listElement);
   });
 
   listElement.prepend(li);
@@ -90,13 +87,6 @@ function getDragAfterElement(list, y) {
   ).element;
 }
 
-function updateIndexes(listElement) {
-  [...listElement.children].forEach((li, index) => {
-    const text = li.textContent.split(' ').pop(); 
-    li.textContent = `${index + 1}. ${text}`;
-  });
-}
-
 function removeLast(listElement) {
   if (listElement.lastChild) listElement.removeChild(listElement.lastChild);
 }
@@ -108,42 +98,124 @@ button.addEventListener('click', () => {
   redoList.innerHTML = '';
 
   applyColor(color);
-  addToList(colorList, color, history.length);
+  addToList(colorList, color);
   button.textContent = history.length;
 });
 
 undoBtn.addEventListener('click', () => {
   if (history.length > 0) {
-    const lastColor = history.pop();
-    redoStack.push(lastColor);
-    removeLast(colorList);
+
+    const undoneColor = history.pop();
+
+    redoStack.push(undoneColor);
+
+    if (colorList.firstChild) {
+      colorList.removeChild(colorList.firstChild);
+    }
 
     const prevColor = history[history.length - 1];
     if (prevColor) {
       applyColor(prevColor);
-      button.textContent = history.length;
     } else {
       button.style.backgroundColor = '#ccc';
       button.style.color = '#000';
-      button.textContent = 0;
     }
 
+    button.textContent = history.length;
+
     redoList.innerHTML = '';
-    redoStack.forEach((color, i) => addToList(redoList, color, i + 1));
+
+    [...redoStack].slice().reverse().forEach(color => {
+      const li = document.createElement('li');
+      li.textContent = color.hex;
+      li.style.backgroundColor = color.rgb;
+      li.style.color = getComplementaryColor(color.r, color.g, color.b);
+      redoList.appendChild(li); 
+    });
   }
 });
+
 
 redoBtn.addEventListener('click', () => {
   if (redoStack.length > 0) {
-    const color = redoStack.pop();
-    history.push(color);
+    const redoneColor = redoStack.pop();
+    history.push(redoneColor);
 
-    applyColor(color);
+    applyColor(redoneColor);
     button.textContent = history.length;
 
-    addToList(colorList, color, history.length);
+    addToList(colorList, redoneColor);
 
     redoList.innerHTML = '';
-    redoStack.forEach((color, i) => addToList(redoList, color, i + 1));
+    [...redoStack].slice().reverse().forEach(color => {
+      const li = document.createElement('li');
+      li.textContent = color.hex;
+      li.style.backgroundColor = color.rgb;
+      li.style.color = getComplementaryColor(color.r, color.g, color.b);
+      redoList.appendChild(li);
+    });
   }
 });
+
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+function handleSwipe(li, fromList, toList, fromStack, toStack) {
+  const diff = touchEndX - touchStartX;
+
+  if (Math.abs(diff) > 60) {
+
+    const colorHex = li.textContent.trim();
+    const colorIndex = fromStack.findIndex(c => c.hex === colorHex);
+    if (colorIndex !== -1) {
+      const [movedColor] = fromStack.splice(colorIndex, 1);
+      toStack.push(movedColor);
+
+      li.remove();
+
+      fromList.innerHTML = '';
+      fromStack.forEach(color => addToList(fromList, color));
+      toList.innerHTML = '';
+      toStack.forEach(color => addToList(toList, color));
+    }
+  }
+}
+
+function addSwipeEvents(li, fromList, toList, fromStack, toStack) {
+  li.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  });
+
+  li.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].clientX;
+    handleSwipe(li, fromList, toList, fromStack, toStack);
+  });
+}
+
+function addToList(listElement, color) {
+  const li = document.createElement('li');
+  li.textContent = color.hex;
+  li.style.backgroundColor = color.rgb;
+  li.style.color = getComplementaryColor(color.r, color.g, color.b);
+  li.draggable = true;
+
+
+  li.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('text/plain', null);
+    li.classList.add('dragging');
+  });
+
+  li.addEventListener('dragend', () => {
+    li.classList.remove('dragging');
+  });
+
+
+  if (listElement === colorList) {
+    addSwipeEvents(li, colorList, redoList, history, redoStack);
+  } else if (listElement === redoList) {
+    addSwipeEvents(li, redoList, colorList, redoStack, history);
+  }
+
+  listElement.prepend(li);
+}

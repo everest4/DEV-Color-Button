@@ -8,6 +8,7 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: 'Montserrat', sans-serif;
+  background-color:rgb(33, 56, 48);
 }
 
 section {
@@ -20,6 +21,7 @@ section {
   gap: 40px;
 }
 
+/* Left Undo column */
 .color-history,
 .redo-history {
   width: 220px;
@@ -47,7 +49,7 @@ section {
   justify-content: space-between;
 }
 
-/* === MAIN AREA === */
+/* Main /area */
 .main-area {
   display: flex;
   flex-direction: column;
@@ -90,4 +92,35 @@ li.dragging {
   opacity: 0.5;
   transform: scale(1.02);
   cursor: grabbing;
+}
+
+
+@media (max-width: 768px) {
+  section {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    height: auto;
+  }
+
+  .color-history,
+  .redo-history {
+    width: 90%;
+    height: 200px;
+  }
+
+  .main-area {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  #colorButton {
+    font-size: 40px;
+    padding: 20px 40px;
+  }
+
+  #undoBtn, #redoBtn {
+    font-size: 16px;
+    padding: 8px 15px;
+  }
 }
