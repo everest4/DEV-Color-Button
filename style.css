@@ -8,7 +8,7 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: 'Montserrat', sans-serif;
-  background-color:rgb(33, 56, 48);
+  background-color:rgb(0, 0, 0);
 }
 
 section {
@@ -17,20 +17,22 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f0f0f0;
+  background: linear-gradient( 210deg,rgb(184, 224, 5) -25%, rgb(43, 89, 51) , rgb(20, 30, 50) 70%);
   gap: 40px;
 }
 
-/* Left Undo column */
+/*Undo and redo column */
 .color-history,
 .redo-history {
   width: 220px;
   height: 70%;
   overflow-y: auto;
-  background: #fff;
+  color: white;
+  background: linear-gradient(to bottom, rgb(20, 30, 50), rgb(55, 73, 107));
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   padding: 15px;
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(65, 167, 242, 0.4);
 }
 
 .color-history ul,
@@ -79,13 +81,17 @@ section {
   cursor: pointer;
   border: none;
   border-radius: 10px;
-  background: #ddd;
-  transition: background 0.2s;
+  color: #fff;
+  background:linear-gradient(to bottom, rgb(62, 86, 136), rgb(13, 19, 31));
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
+#colorButton,
 #undoBtn:hover,
 #redoBtn:hover {
-  background: #bbb;
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(65, 167, 242, 0.4);
 }
 
 li.dragging {
