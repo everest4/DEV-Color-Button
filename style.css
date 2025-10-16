@@ -8,7 +8,7 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: 'Montserrat', sans-serif;
-  background-color:rgb(0, 0, 0);
+  background-color: rgb(0, 0, 0);
 }
 
 section {
@@ -17,11 +17,10 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient( 210deg,rgb(184, 224, 5) -25%, rgb(43, 89, 51) , rgb(20, 30, 50) 70%);
   gap: 40px;
+  background: linear-gradient(205deg, rgb(153, 18, 1) -70%, rgb(20, 30, 50) 70%);
 }
 
-/*Undo and redo column */
 .color-history,
 .redo-history {
   width: 220px;
@@ -37,7 +36,7 @@ section {
 
 .color-history ul,
 .redo-history ul {
-  list-style-type: none;
+  list-style: none;
 }
 
 .color-history li,
@@ -51,7 +50,6 @@ section {
   justify-content: space-between;
 }
 
-/* Main /area */
 .main-area {
   display: flex;
   flex-direction: column;
@@ -67,7 +65,7 @@ section {
   cursor: pointer;
   border-radius: 20px;
   transition: background-color 0.3s ease, transform 0.1s ease;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 #colorButton:active {
@@ -78,16 +76,15 @@ section {
 #redoBtn {
   font-size: 20px;
   padding: 10px 20px;
-  cursor: pointer;
   border: none;
   border-radius: 10px;
   color: #fff;
-  background:linear-gradient(to bottom, rgb(62, 86, 136), rgb(13, 19, 31));
+  background: linear-gradient(to bottom, rgb(62, 86, 136), rgb(13, 19, 31));
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-#colorButton,
+#colorButton:hover,
 #undoBtn:hover,
 #redoBtn:hover {
   transform: scale(1.03);
@@ -100,33 +97,84 @@ li.dragging {
   cursor: grabbing;
 }
 
+li.dragging-live {
+  transition: none !important;
+  z-index: 10;
+  position: relative;
+}
+
+@keyframes leaveRight {
+  to { transform: translateX(200%); opacity: 0; }
+}
+@keyframes leaveLeft {
+  to { transform: translateX(-200%); opacity: 0; }
+}
+li.animate-leave-right { animation: leaveRight 0.3s ease forwards; }
+li.animate-leave-left { animation: leaveLeft 0.3s ease forwards; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.added {
+  animation: fadeIn 0.3s ease forwards;
+}
 
 @media (max-width: 768px) {
   section {
+    position: relative;
     flex-direction: column;
     gap: 20px;
     padding: 20px;
-    height: auto;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  .main-area {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+  }
+
+  #colorButton {
+    font-size: 50px;
+    padding: 40px 80px;
+  }
+
+  #undoBtn,
+  #redoBtn {
+    font-size: 20px;
+    padding: 12px 25px;
   }
 
   .color-history,
   .redo-history {
-    width: 90%;
-    height: 200px;
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 80%;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 
-  .main-area {
-    flex-direction: row;
-    gap: 10px;
+  .color-history {
+    left: 0;
+    transform: translateX(-100%);
   }
-
-  #colorButton {
-    font-size: 40px;
-    padding: 20px 40px;
+  .redo-history {
+    right: 0;
+    transform: translateX(100%);
   }
-
-  #undoBtn, #redoBtn {
-    font-size: 16px;
-    padding: 8px 15px;
+  .color-history.show,
+  .redo-history.show {
+    transform: translateX(0);
   }
 }
